@@ -8,6 +8,9 @@ import java.util.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.availability.AvailabilityChangeEvent;
+import org.springframework.boot.availability.ReadinessState;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
@@ -32,6 +35,7 @@ class ApiIntegrationTest {
     @Autowired ObjectMapper json;
     @Autowired JdbcTemplate jdbc;
     @Autowired SocialService service;
+    @Autowired ConfigurableApplicationContext application;
     UUID owner;
     UUID stranger;
 
@@ -49,6 +53,16 @@ class ApiIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON).content(payload(Map.of("caption", "A real persisted music post", "trackId", TRACK))))
                 .andExpect(status().isCreated()).andExpect(jsonPath("author.id").value(owner.toString())).andReturn();
         return body(result).get("id").asText();
+    }
+
+    @Test void statusWaitsUntilStartupRunnersComplete() throws Exception {
+        AvailabilityChangeEvent.publish(application, ReadinessState.REFUSING_TRAFFIC);
+        try {
+            mvc.perform(get("/api/v1/status")).andExpect(status().isServiceUnavailable());
+        } finally {
+            AvailabilityChangeEvent.publish(application, ReadinessState.ACCEPTING_TRAFFIC);
+        }
+        mvc.perform(get("/api/v1/status")).andExpect(status().isOk()).andExpect(jsonPath("status").value("ok"));
     }
 
     @Test void publicFeedAndHonestUnverifiedCatalog() throws Exception {

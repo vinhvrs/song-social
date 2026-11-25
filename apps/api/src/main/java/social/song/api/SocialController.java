@@ -5,6 +5,10 @@ import jakarta.validation.constraints.*;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.availability.ApplicationAvailability;
+import org.springframework.boot.availability.ReadinessState;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +18,21 @@ import org.springframework.web.bind.annotation.*;
 class SocialController {
     private final SocialService social;
     private final boolean demoContent;
-    SocialController(SocialService social, @Value("${song.seed-demo}") boolean demoContent) { this.social=social; this.demoContent=demoContent; }
+    private final ApplicationAvailability availability;
+    SocialController(SocialService social, @Value("${song.seed-demo}") boolean demoContent,
+                     ApplicationAvailability availability) {
+        this.social=social; this.demoContent=demoContent; this.availability=availability;
+    }
 
     record NewPost(@NotNull @Size(max=2000) String caption, @NotNull UUID trackId, UUID passageId) {}
     record NewComment(@NotBlank @Size(max=1000) String body) {}
     record ProfileEdit(@NotBlank @Size(max=60) String displayName, @NotNull @Size(max=280) String bio) {}
 
     @GetMapping("/status") Map<String, Object> status() {
+        // Tomcat accepts requests before ApplicationRunner transactions finish.
+        // Readiness only becomes ACCEPTING_TRAFFIC after every startup runner has returned.
+        if (availability.getReadinessState() != ReadinessState.ACCEPTING_TRAFFIC)
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Ứng dụng đang khởi động. Vui lòng thử lại.");
         return Map.of("status", "ok", "reviewedPassages", social.reviewedPassages(), "demoContent", demoContent);
     }
     @GetMapping("/feed") Views.Page<Views.Post> feed(@RequestParam(defaultValue="discover") String tab,

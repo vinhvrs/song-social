@@ -28,6 +28,8 @@ Seed users have `_demo` handles and **disabled login** with random password hash
 
 The application assumes a trusted reverse proxy and uses forwarded headers. Do not expose it behind an untrusted intermediary that accepts arbitrary forwarded headers. Use the Next.js same-origin proxy, restrict the backend origin at the network level, and set secure cookies for public deployments.
 
+`GET /api/v1/status` returns HTTP 503 while startup runners are still working, and HTTP 200 only after startup completes. This prevents readiness checks from racing the initial seed transaction.
+
 ## Authentication
 
 1. `GET /api/v1/auth/csrf` returns a token and `XSRF-TOKEN` cookie.

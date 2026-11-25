@@ -4,7 +4,7 @@ This record describes checks actually completed for the initial v0.1 source. It 
 
 | Check | Result | Evidence / scope |
 | --- | --- | --- |
-| Java tests | 11 passed | 8 API integration cases, 2 normalization cases, 1 persisted session/cookie/CSRF/logout case |
+| Java tests | 12 passed | 9 API integration cases, 2 normalization cases, 1 persisted session/cookie/CSRF/logout case |
 | Java package | Passed | Spring Boot executable JAR produced from the tested source |
 | Frontend origin regression tests | 4 passed | Actual Host preserved despite Next loopback normalization; HTTPS/IPv6/default ports; cross-origin and spoofed forwarding rejection |
 | TypeScript | Passed | `next typegen && tsc --noEmit` |
@@ -20,6 +20,12 @@ This record describes checks actually completed for the initial v0.1 source. It 
 The smoke script verifies public feed/catalog; CSRF rejection; registration and isolated sessions; authorization on private reads/writes; post persistence and author-only deletion; repeat like/unlike; comments and empty-input validation; private saved library; following/unfollowing; profile persistence; honest no-match and rejection of arbitrary passage IDs; deletion, logout and password login.
 
 The HTTP smoke ran through the Next.js proxy on a local full-stack instance, rather than calling only mock controllers. It caught and led to fixes for two integration defects: Next's loopback host normalization in Origin checks, and overly strict JSON media-type enforcement on valid empty-body actions.
+
+The first GitHub Actions run additionally caught a startup race: `/status` reported ready before the transactional demo seed finished, so the first track query could see an empty catalog. The API now returns 503 until Spring reports `ReadinessState.ACCEPTING_TRAFFIC`, with a regression test for the transition to 200. The smoke script's existing readiness retry remains unchanged. A cold start against a fresh PostgreSQL database subsequently produced the expected 503 → 200 transition and passed all 12 HTTP scenarios.
+
+## Hosted web
+
+[song-social.vercel.app](https://song-social.vercel.app/) was deployed on Vercel and opened successfully in the browser. It visibly identifies itself as a read-only preview because no hosted Java API/database is connected. Deployment does not change the data or audio limits below.
 
 ## Catalog SQL isolation
 

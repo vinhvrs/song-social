@@ -2,6 +2,8 @@
 
 **Mạng xã hội bắt đầu từ một bài nhạc.**
 
+[Web demo — chỉ đọc](https://song-social.vercel.app/) · [CI](https://github.com/vinhvrs/song-social/actions) · [Kết quả kiểm tra](docs/verification.md)
+
 Chia sẻ bài hát cùng câu chuyện của bạn, khám phá gu nhạc của người khác, theo dõi, bình luận và lưu lại những bài đăng muốn nghe lần nữa. Song Social phát triển từ ý tưởng âm nhạc của CatWave và trải nghiệm xã hội của VibeTalk; đây là codebase mới.
 
 Điểm khác biệt được thiết kế xuyên suốt sản phẩm: **câu bạn viết → đoạn lời thực sự được hát trong một bản thu → nghe thử → chọn và chia sẻ**. Đơn vị tìm kiếm là đoạn lời có thời gian bắt đầu/kết thúc, không phải chỉ một bài hát có cùng tâm trạng.
