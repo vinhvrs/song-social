@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "passages": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "trackId": "00000000-0000-4000-8000-000000000002",
+      "text": "Một câu tự viết để kiểm tra bản nháp.",
+      "language": "vi",
+      "startMs": null,
+      "endMs": null,
+      "verification": "DRAFT",
+      "recording": {
+        "provider": "YOUTUBE",
+        "youtubeId": null,
+        "sourceUrl": null,
+        "lyricsSourceUrl": null,
+        "durationMs": null
+      },
+      "rights": {
+        "basis": null,
+        "referenceUrl": null,
+        "attribution": null
+      },
+      "review": {
+        "reviewer": null,
+        "reviewedAt": null,
+        "textMatchesRecording": false,
+        "boundariesChecked": false,
+        "playbackChecked": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+  error:
+    include-message: never
+    include-stacktrace: never
+  servlet:
+    session:
+      timeout: 7d
+spring:
+  application:
+    name: song-social-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/song_social}
+    username: ${DATABASE_USERNAME:song_social}
+    password: ${DATABASE_PASSWORD:}
+    hikari:
+      maximum-pool-size: ${DATABASE_POOL_SIZE:5}
+      minimum-idle: 1
+      connection-timeout: 10000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: never
+      cleanup-cron: '0 */10 * * * *'
+  mvc:
+    log-request-details: false
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+song:
+  secure-cookies: ${SESSION_COOKIE_SECURE:false}
+  seed-demo: ${SEED_DEMO:true}
+logging:
+  level:
+    org.springframework.security: WARN

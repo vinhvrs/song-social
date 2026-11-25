@@ -1,0 +1,100 @@
+import type { Post, Track, User } from "./types";
+export const demoTracks: Track[] = [
+  {
+    id: "10000000-0000-0000-0000-000000000001",
+    title: "On & On (feat. Daniel Levi)",
+    artist: "Cartoon, Jéja",
+    youtubeId: "K4DyBUG242c",
+    genre: "Electronic",
+    color: "#c7f0dd",
+  },
+  {
+    id: "10000000-0000-0000-0000-000000000002",
+    title: "Invincible",
+    artist: "DEAF KEV",
+    youtubeId: "J2X5mJ3HDYE",
+    genre: "Electronic",
+    color: "#f5c7d5",
+  },
+  {
+    id: "10000000-0000-0000-0000-000000000003",
+    title: "Never Gonna Give You Up",
+    artist: "Rick Astley",
+    youtubeId: "dQw4w9WgXcQ",
+    genre: "Pop",
+    color: "#e5dbff",
+  },
+];
+export const demoUsers: User[] = [
+  {
+    id: "demo-linh",
+    handle: "linh_demo",
+    displayName: "Linh Nguyễn",
+    bio: "Lưu lại những giai điệu làm một ngày bình thường trở nên đáng nhớ.",
+    avatarColor: "#e3a285",
+    followersCount: 0,
+    followingCount: 0,
+    following: false,
+  },
+  {
+    id: "demo-khoa",
+    handle: "khoa_demo",
+    displayName: "Khoa Trần",
+    bio: "Một chút electronic, một chút năng lượng cho ngày mới.",
+    avatarColor: "#a8b69b",
+    followersCount: 0,
+    followingCount: 0,
+    following: false,
+  },
+  {
+    id: "demo-mai",
+    handle: "mai_demo",
+    displayName: "Mai Anh",
+    bio: "Có những bài hát nghe lần nào cũng thấy vui.",
+    avatarColor: "#b2aac8",
+    followersCount: 0,
+    followingCount: 0,
+    following: false,
+  },
+];
+export const demoPosts: Post[] = [
+  {
+    id: "demo-post-1",
+    author: demoUsers[0],
+    caption:
+      "Có những ngày chỉ cần một bài hát quen, một đôi tai nghe và một chuyến đi không vội. Hôm nay bạn đang nghe gì?",
+    track: demoTracks[0],
+    passage: null,
+    createdAt: "2026-11-25T03:30:00Z",
+    likesCount: 0,
+    commentsCount: 0,
+    liked: false,
+    saved: false,
+  },
+  {
+    id: "demo-post-2",
+    author: demoUsers[1],
+    caption:
+      "Bật chút năng lượng cho buổi chiều. Chia sẻ với những ai đang cần một nhịp mới.",
+    track: demoTracks[1],
+    passage: null,
+    createdAt: "2026-11-25T02:10:00Z",
+    likesCount: 0,
+    commentsCount: 0,
+    liked: false,
+    saved: false,
+  },
+  {
+    id: "demo-post-3",
+    author: demoUsers[2],
+    caption:
+      "Một bài hát từ thời ba mẹ, nhưng vẫn nằm trong danh sách yêu thích của mình. Âm nhạc có cách kết nối các thế hệ thật hay.",
+    track: demoTracks[2],
+    passage: null,
+    createdAt: "2026-11-24T15:00:00Z",
+    likesCount: 0,
+    commentsCount: 0,
+    liked: false,
+    saved: false,
+  },
+];

@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/vinhvrs/song-social/blob/main/tools/catalog/schema.json",
+  "title": "Song Social reviewed lyric catalog v1",
+  "description": "Editor/static shape validation only. catalog.py additionally checks recording consistency, chronological review evidence, cross-field timestamps, duplicate entries and exact text normalization. REVIEWED records still require actual human listening and permission checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "passages"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "passages": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "trackId",
+          "text",
+          "language",
+          "startMs",
+          "endMs",
+          "verification",
+          "recording",
+          "rights",
+          "review"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "language": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16,
+            "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+          },
+          "startMs": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 86400000
+          },
+          "endMs": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 86400000
+          },
+          "verification": {
+            "enum": [
+              "DRAFT",
+              "REVIEWED"
+            ]
+          },
+          "recording": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "provider",
+              "youtubeId",
+              "sourceUrl",
+              "lyricsSourceUrl",
+              "durationMs"
+            ],
+            "properties": {
+              "provider": {
+                "const": "YOUTUBE"
+              },
+              "youtubeId": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 11,
+                "pattern": "^[A-Za-z0-9_-]{11}$"
+              },
+              "sourceUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 2000,
+                "format": "uri"
+              },
+              "lyricsSourceUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 2000,
+                "format": "uri"
+              },
+              "durationMs": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1,
+                "maximum": 86400000
+              }
+            }
+          },
+          "rights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "basis",
+              "referenceUrl",
+              "attribution"
+            ],
+            "properties": {
+              "basis": {
+                "enum": [
+                  "OWNED",
+                  "LICENSED",
+                  "PUBLIC_DOMAIN",
+                  "CC0",
+                  "CC_BY",
+                  "CC_BY_SA",
+                  null
+                ]
+              },
+              "referenceUrl": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 2000,
+                "format": "uri"
+              },
+              "attribution": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 1500
+              }
+            }
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reviewer",
+              "reviewedAt",
+              "textMatchesRecording",
+              "boundariesChecked",
+              "playbackChecked"
+            ],
+            "properties": {
+              "reviewer": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "reviewedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1,
+                "maxLength": 64,
+                "format": "date-time"
+              },
+              "textMatchesRecording": {
+                "type": "boolean"
+              },
+              "boundariesChecked": {
+                "type": "boolean"
+              },
+              "playbackChecked": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "verification": {
+                  "const": "REVIEWED"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "startMs": {
+                  "type": "integer"
+                },
+                "endMs": {
+                  "type": "integer"
+                },
+                "recording": {
+                  "properties": {
+                    "youtubeId": {
+                      "type": "string"
+                    },
+                    "sourceUrl": {
+                      "type": "string"
+                    },
+                    "lyricsSourceUrl": {
+                      "type": "string"
+                    },
+                    "durationMs": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "rights": {
+                  "properties": {
+                    "basis": {
+                      "type": "string"
+                    },
+                    "referenceUrl": {
+                      "type": "string"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "review": {
+                  "properties": {
+                    "reviewer": {
+                      "type": "string"
+                    },
+                    "reviewedAt": {
+                      "type": "string"
+                    },
+                    "textMatchesRecording": {
+                      "const": true
+                    },
+                    "boundariesChecked": {
+                      "const": true
+                    },
+                    "playbackChecked": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
